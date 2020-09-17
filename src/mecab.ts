@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import * as util from 'util';
 import * as stream from 'stream';
 import * as memoryStreams from 'memory-streams';
+import { EOL } from 'os';
 
 const pipeline = util.promisify(stream.pipeline);
 
@@ -19,7 +20,7 @@ export async function mecab(text: string, mecab = 'mecab', dic?: string): Promis
 
 	const results: string[][] = [];
 
-	for (const line of result.split('\n')) {
+	for (const line of result.split(EOL)) {
 		if (line === 'EOS') break;
 		const [word, value = ''] = line.split('\t');
 		const array = value.split(',');
