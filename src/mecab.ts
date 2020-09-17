@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import * as util from 'util';
 import * as stream from 'stream';
-import * as streams from 'memory-streams';
+import * as memoryStreams from 'memory-streams';
 
 const pipeline = util.promisify(stream.pipeline);
 
@@ -33,7 +33,7 @@ export async function mecab(text: string, mecab = 'mecab', dic?: string): Promis
 export async function cmd(command: string, args: string[], stdin: string): Promise<string> {
 	const mecab = spawn(command, args);
 
-	const writable = new streams.WritableStream();
+	const writable = new memoryStreams.WritableStream();
 
 	mecab.stdin.write(stdin);
 	mecab.stdin.end();
