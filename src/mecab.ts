@@ -11,13 +11,13 @@ const pipeline = util.promisify(stream.pipeline);
  * @param mecab mecab bin
  * @param dic mecab dictionaly path
  */
-export async function mecab(text: string, mecab = 'mecab', dic?: string) {
+export async function mecab(text: string, mecab = 'mecab', dic?: string): Promise<string[][]> {
 	const args = [];
 	if (dic) args.push('-d', dic);
 
 	const result = await cmd(mecab, args, `${text.replace(/[\n\s\t]/g, ' ')}\n`);
 
-	const results = [] as string[][];
+	const results: string[][] = [];
 
 	for (const line of result.split('\n')) {
 		if (line === 'EOS') break;
@@ -30,7 +30,7 @@ export async function mecab(text: string, mecab = 'mecab', dic?: string) {
 	return results;
 }
 
-export async function cmd(command: string, args: string[], stdin: string) {
+export async function cmd(command: string, args: string[], stdin: string): Promise<string> {
 	const mecab = spawn(command, args);
 
 	const writable = new streams.WritableStream();
