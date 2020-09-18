@@ -16,11 +16,11 @@ export async function mecab(text: string, mecab = 'mecab', dic?: string): Promis
 	const args = [];
 	if (dic) args.push('-d', dic);
 
-	const result = await cmd(mecab, args, `${text.replace(/[\n\s\t]/g, ' ')}\n`);
+	const lines = await cmd(mecab, args, `${text.replace(/[\n\s\t]/g, ' ')}\n`);
 
 	const results: string[][] = [];
 
-	for (const line of result.split(EOL)) {
+	for (const line of lines) {
 		if (line === 'EOS') break;
 		const [word, value = ''] = line.split('\t');
 		const array = value.split(',');
@@ -31,7 +31,7 @@ export async function mecab(text: string, mecab = 'mecab', dic?: string): Promis
 	return results;
 }
 
-export async function cmd(command: string, args: string[], stdin: string): Promise<string> {
+export async function cmd(command: string, args: string[], stdin: string): Promise<string[]> {
 	const mecab = spawn(command, args);
 
 	const writable = new memoryStreams.WritableStream();
@@ -41,5 +41,5 @@ export async function cmd(command: string, args: string[], stdin: string): Promi
 
 	await pipeline(mecab.stdout, writable);
 
-	return writable.toString();
+	return writable.toString().split(EOL);
 }
