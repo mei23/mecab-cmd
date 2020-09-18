@@ -8,7 +8,7 @@ const pipeline = util.promisify(stream.pipeline);
 
 /**
  * Run MeCab
- * @param text Text to analize
+ * @param text Text to analyze
  * @param mecab mecab bin
  * @param dic mecab dictionaly path
  */
